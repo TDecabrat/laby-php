@@ -1,11 +1,14 @@
 <?php
 require_once("entities.php");
+require_once("gameState.php");
 
 $player1 = new Player("Red");
 $player2 = new Player("Yellow");
 
 $token1 = new Token($player1, 0, 0, "sprites/".$player1->color."Token.png");
 $token2 = new Token($player2, 0, 0, "sprites/".$player2->color."Token.png");
+
+$gameState = new GameState([$player1, $player2], []);
 
 $_SESSION["player1"] = $player1;
 $_SESSION["player2"] = $player2;
