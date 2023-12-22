@@ -20,6 +20,13 @@ class Player
         $this->color = $color;
         $this->tokens = [];
     }
+
+    /**
+     * @return void Ajoute un jeton au joueur
+     */
+    public function addToken(Token $token): void {
+        $this->tokens[] = $token;
+    }
 }
 
 /**
