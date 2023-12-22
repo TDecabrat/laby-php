@@ -1,5 +1,12 @@
 <?php
 
+/**
+ * Classe stockant l'état du jeu et permettant son importation/exporation en JSON
+ * @property array $players Joueurs du jeu
+ * @property array $board Plateau de jeu
+ * @property int $currentPlayerIndex Index du joueur actuel
+ * @method Player getCurrentPlayer() Joueur dont c'est le tour
+ */
 class GameState
 { 
     public array $players = [];
