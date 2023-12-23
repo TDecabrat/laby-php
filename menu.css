@@ -1,0 +1,81 @@
+/* Reset CSS for consistent styling across browsers */
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #DFDFDF;
+    color: #4C4C4C;
+    text-align: center;
+    padding: 20px;
+}
+
+h1 {
+    color: #329CB5;
+}
+
+h2 {
+    color: #4C4C4C;
+}
+
+.menu {
+    max-width: 35em;
+    margin: 20px auto;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 4px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.newGame {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+select {
+    width: 100%;
+    padding: 8px;
+    border-radius: 4px;
+}
+
+.newGameControls {
+    margin-top: 15px;
+}
+
+button {
+    background-color: #6FBC09;
+    color: #ffffff;
+    padding: 10px 15px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #667f33;
+}
+
+input[type="submit"] {
+    background-color: #329CB5;
+    color: #ffffff;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+input[type="submit"]:hover {
+    background-color: #1880a0;
+}
