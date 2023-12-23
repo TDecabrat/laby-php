@@ -56,11 +56,12 @@ class GameState
      * 
      * @param int $pos_x Position X du token
      * @param int $pos_y Position Y du token
-     * @return Token Token à la position donnée
+     * @return Token|null Token à la position donnée, ou NULL si les coordonnées sont invalides
      */
-    public function getToken($pos_x, $pos_y): Token {
-        if ($pos_x < 0 || $pos_y < 0 || $pos_x > $this->getWidth() || $pos_y > $this->getHeight()) {
-            return NULL;
+    public function getToken($pos_x, $pos_y): ?Token {
+        if ($pos_x < 0 || $pos_y < 0 || $pos_x >= $this->getWidth() || $pos_y >= $this->getHeight() || is_null($this->board[$pos_x][$pos_y])) {
+            $token = new Token(null, $pos_x, $pos_y, "sprites/emptyToken.png");
+            return $token;
         } else {
             return $this->board[$pos_x][$pos_y];
         }

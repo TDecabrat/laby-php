@@ -3,30 +3,50 @@
 </style>
 
 <?php
-require_once("entities.php");
+require_once("gameManager.php");
 require_once("gameState.php");
-require_once("power4MapGenerator.php");
+session_start();
 
+if (isset($_GET["reset"])) {
+    $_SESSION["gameManager"] = null;
+}
+if (isset($_GET["save"])) {
+    $_SESSION["gameManager"] = $_SESSION["gameManager"]->downloadGameState();
+}
 
-$player1 = new Player("Red");
-$player2 = new Player("Yellow");
-$player3 = new Player("Blue");
+if (isset($_SESSION["gameState"])) {
+    $_SESSION["gameManager"] = new GameManager(GameState::loadGameState($_SESSION["gameState"]));
+     $_SESSION["gameManager"]->areFourConnectedWhole();
+    $_SESSION["gameState"] = NULL;
+}
 
-$gameState = new GameState([$player1, $player2, $player3], power4MapGenerator::generateMap(7,7));
+if (isset($_SESSION["gameManager"])) {
+    $gameManager = $_SESSION["gameManager"];
+    $gameState = $gameManager->gameState;
+} else {
+    $gameManager = GameManager::newGame(2, 6, 7);
+    $gameState = $gameManager->gameState;
+    $_SESSION["gameManager"] = $gameManager;
+}
 
-$_SESSION["player1"] = $player1;
-$_SESSION["player2"] = $player2;
-$_SESSION["player3"] = $player3;
-
-for ($i = 0; $i < 7; $i++) {
-    for ($j = 0; $j < 7; $j++) {
-        power4MapGenerator::placerPion($i, $j, $gameState->players[array_rand($gameState->players)], $gameState->board);
-    }
+if (isset($_GET["pos_x"]) && isset($_GET["pos_y"])) {
+    $pos_x = $_GET["pos_x"];
+    $pos_y = $_GET["pos_y"];
+    $gameManager->placeToken($pos_x, $pos_y);
+    $_SESSION["gameManager"] = $gameManager;
 }
 
 
 echo "HomePage";
 echo "<br>";
-echo power4MapGenerator::generateMapHTML($gameState->board);
+echo "<a href='menu.php'><button>Menu</button></a>";
+// Reset
+echo "<a href='/?reset=1'><button>Reset</button></a>";
+//Sauvegarde de la partie
+echo "<a href='/save.php'><button>Sauvegarder</button></a>";
+//Sauvegarde de la partie local
+echo "<a href='/?save=1'><button>Sauvegarder</button></a>";
+
+echo power4MapGenerator::generateMapHTML($gameState->board, !$gameManager->win);
 
 

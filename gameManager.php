@@ -55,10 +55,9 @@ class GameManager{
      * Les mérites reviennent à ferdelOlmo
      * https://stackoverflow.com/questions/32770321/connect-4-check-for-a-win-algorithm
      * 
-     * @param int $player Player to check for
-     * @return bool True if the player has won, false otherwise
+     * @return bool True si le joueur a gagné, False sinon
      */
-    public function areFourConnectedWhole(int $player){
+    public function areFourConnectedWhole(){
         $currentPlayer = $this->gameState->getCurrentPlayer();
 
         // horizontalCheck 
@@ -111,42 +110,60 @@ class GameManager{
      * @return bool True si le joueur a gagné, False sinon
      */
     public function areFourConnected(Token $token) {
+        // horizontalCheck
         for ($j = $token->pos_y - 3; $j <= $token->pos_y; $j++) {
             if ($j >= 0 && $j + 3 < $this->gameState->getHeight()) {
-                if ($this->getToken($token->pos_x, $j)->player == $token->player && $this->getToken($token->pos_x, $j + 1)->player == $token->player && 
-                    $this->getToken($token->pos_x, $j + 2)->player == $token->player && $this->getToken($token->pos_x, $j + 3)->player == $token->player) {
+                if ($this->getToken($token->pos_x, $j)->player == $token->player && 
+                    $this->getToken($token->pos_x, $j + 1)->player == $token->player && 
+                    $this->getToken($token->pos_x, $j + 2)->player == $token->player && 
+                    $this->getToken($token->pos_x, $j + 3)->player == $token->player) {
                     return True;
                 }
             }
         }
 
+        // verticalCheck
         for ($j = $token->pos_x - 3; $j <= $token->pos_x; $j++) {
             if ($j >= 0 && $j + 3< $this->gameState->getWidth()) {
-                if ($this->getToken($j, $token->pos_y)->player == $token->player && $this->getToken($j + 1, $token->pos_y)->player == $token->player && 
-                    $this->getToken($j + 2, $token->pos_y)->player == $token->player && $this->getToken($j + 3, $token->pos_y)->player == $token->player) {
+                if ($this->getToken($j, $token->pos_y)->player == $token->player && 
+                    $this->getToken($j + 1, $token->pos_y)->player == $token->player && 
+                    $this->getToken($j + 2, $token->pos_y)->player == $token->player && 
+                    $this->getToken($j + 3, $token->pos_y)->player == $token->player) {
                     return True;
                 }
             }
         }
-
-        for ($j = $token->pos_x - 3; $j <= $token->pos_x; $j++) {
-            if ($j >= 0 && $j + 3 < $this->gameState->getWidth() && $token->pos_y + 3 < $this->gameState->getHeight()) {
-                if ($this->getToken($j, $token->pos_y)->player == $token->player && $this->getToken($j + 1, $token->pos_y + 1)->player == $token->player && 
-                    $this->getToken($j + 2, $token->pos_y + 2)->player == $token->player && $this->getToken($j + 3, $token->pos_y + 3)->player == $token->player) {
-                    return True;
+        
+        // ascendingDiagonalCheck 
+        for ($i = 3; $i >= -3; $i--) {
+            $row = $token->pos_x + $i;
+            $col = $token->pos_y + $i;
+            
+            if ($row >= 0 && $col >= 0 && $row + 3 < $this->gameState->getWidth() && $col + 3 < $this->gameState->getHeight()) {
+                if ($this->getToken($row, $col)->player == $token->player && 
+                    $this->getToken($row + 1, $col + 1)->player == $token->player && 
+                    $this->getToken($row + 2, $col + 2)->player == $token->player && 
+                    $this->getToken($row + 3, $col + 3)->player == $token->player) {
+                    return true;
                 }
             }
         }
 
-        for ($j = $token->pos_x - 3; $j <= $token->pos_x; $j++) {
-            if ($j >= 0 && $j + 3 < $this->gameState->getWidth() && $token->pos_y - 3 >= 0) {
-                if ($this->getToken($j, $token->pos_y)->player == $token->player && $this->getToken($j + 1, $token->pos_y - 1)->player == $token->player && 
-                    $this->getToken($j + 2, $token->pos_y - 2)->player == $token->player && $this->getToken($j + 3, $token->pos_y - 3)->player == $token->player) {
-                    return True;
+        // descendingDiagonalCheck
+        for ($i = 3; $i >= -3; $i--) {
+            $row = $token->pos_x + $i;
+            $col = $token->pos_y - $i;
+            
+            if ($row >= 0 && $col >= 0 && $row + 3 < $this->gameState->getWidth() && $col - 3 >= 0) {
+                if ($this->getToken($row, $col)->player == $token->player && 
+                    $this->getToken($row + 1, $col - 1)->player == $token->player && 
+                    $this->getToken($row + 2, $col - 2)->player == $token->player && 
+                    $this->getToken($row + 3, $col - 3)->player == $token->player) {
+                    return true;
                 }
             }
         }
-
+        
         return False;
     }
 
@@ -160,6 +177,7 @@ class GameManager{
     public function placeToken($pos_x, $pos_y) {
         if (power4MapGenerator::placerPion($pos_x, $pos_y, $this->gameState->getCurrentPlayer(), $this->gameState->board)) {
             if ($this->areFourConnected($this->getToken($pos_x, $pos_y))) {
+                echo "Victoire pour le joueur ".$this->gameState->getCurrentPlayer()->color." !";
                 $this->win = true;
             } else {
                 $this->nextPlayer();
@@ -168,6 +186,10 @@ class GameManager{
         }
         return False;
     }
+
+    /**
+     * 
+     */
 
 
     /**
