@@ -14,7 +14,10 @@ if ((isset($_GET["players"]) && isset($_GET["width"]) && isset($_GET["height"]))
     $_SESSION["gameManager"] = GameManager::newGame($players, $width, $height);
     $_SESSION["gameState"] = null;
     $_COOKIE["gameState"] = null;
-} 
+}
+else if (isset($_SESSION["gameManager"])){
+    $gameManager = $_SESSION["gameManager"];
+}
 else if (isset($_SESSION["gameState"])) {
     $_SESSION["gameManager"] = new GameManager(GameState::loadGameState($_SESSION["gameState"]));
     $_SESSION["gameManager"]->checkWinUponFirstLoad();
@@ -41,7 +44,7 @@ if (isset($_GET["reset"])) {
 $gameManager = $_SESSION["gameManager"];
 
 // Placement de token
-if (isset($_GET["pos_x"]) && isset($_GET["pos_y"])) {
+if (isset($_GET["pos_x"]) && isset($_GET["pos_y"]) && !$gameManager->win) {
     $pos_x = $_GET["pos_x"];
     $pos_y = $_GET["pos_y"];
     $gameManager->placeToken($pos_x, $pos_y);
@@ -50,6 +53,7 @@ if (isset($_GET["pos_x"]) && isset($_GET["pos_y"])) {
 $gameState = $gameManager->gameState;
 setcookie("gameState", $gameState->getGameStateAsSerial(), ["expires" => time() + 3600]);
 $gameManager->checkWin();
+
 
 // Retour au menu
 echo "<a href='menu.php'><button>Menu</button></a>";
