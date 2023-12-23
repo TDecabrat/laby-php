@@ -39,7 +39,7 @@ class GameState
     /**
      * @return string Etat du jeu au format JSON | Pour la sauvegarde
      */
-    public function getGameState() {
+    public function getGameStateAsJSON() {
         return json_encode($this);
     }
 
@@ -49,5 +49,38 @@ class GameState
      */
     public static function loadGameState(string $gameStateAsJson): GameState {
         return json_decode($gameStateAsJson);
+    }
+
+    /**
+     * Renvoie le token à une position donnée
+     * 
+     * @param int $pos_x Position X du token
+     * @param int $pos_y Position Y du token
+     * @return Token Token à la position donnée
+     */
+    public function getToken($pos_x, $pos_y): Token {
+        if ($pos_x < 0 || $pos_y < 0 || $pos_x > $this->getWidth() || $pos_y > $this->getHeight()) {
+            return NULL;
+        } else {
+            return $this->board[$pos_x][$pos_y];
+        }
+    }
+
+    /**
+     * Renvoie la largeur du plateau de jeu
+     * 
+     * @return int Largeur du plateau de jeu
+     */
+    public function getWidth(): int {
+        return count($this->board);
+    }
+
+    /**
+     * Renvoie la hauteur du plateau de jeu
+     * 
+     * @return int Hauteur du plateau de jeu
+     */
+    public function getHeight(): int {
+        return count($this->board[0]);
     }
 }
