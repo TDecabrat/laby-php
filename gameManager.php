@@ -8,7 +8,7 @@ require_once("power4MapGenerator.php");
 class GameManager{
     public GameState $gameState;
     public static array $colors = ["Red", "Yellow", "Blue", "Green"]; // Ajouter des couleurs si besoin
-    public bool $win;
+    private bool $win;
 
     /**
      * @param GameState $gameState Variables d'état du jeu
@@ -34,7 +34,7 @@ class GameManager{
     /**
      * @return void Change le joueur dont c'est le tour
      */
-    public function nextPlayer(): void {
+    private function nextPlayer(): void {
         $this->gameState->nextPlayer();
     }
 
@@ -57,7 +57,7 @@ class GameManager{
      * 
      * @return bool True si le joueur a gagné, False sinon
      */
-    public function areFourConnectedWhole(): bool {
+    private function areFourConnectedWhole(): bool {
         $currentPlayer = $this->gameState->getCurrentPlayer();
 
         // horizontalCheck 
@@ -109,7 +109,7 @@ class GameManager{
      * @param Token $token Pion à vérifier
      * @return bool True si le joueur a gagné, False sinon
      */
-    public function areFourConnected(Token $token): bool{
+    private function areFourConnected(Token $token): bool{
         // horizontalCheck
         for ($j = $token->pos_y - 3; $j <= $token->pos_y; $j++) {
             if ($j >= 0 && $j + 3 < $this->gameState->getHeight()) {
@@ -178,11 +178,11 @@ class GameManager{
 
     /**
      * Vérifie la condition de victoire lors du cours du jeu
+     * 
+     * @return bool True si le joueur a gagné, False sinon
      */
-    public function checkWin(): void {
-        if ($this->win) {
-            echo "Victoire pour le joueur ".$this->gameState->getCurrentPlayer()->color." !";
-        }
+    public function checkWin(): bool {
+        return $this->win;
     }
 
     /**
