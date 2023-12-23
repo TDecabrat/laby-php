@@ -3,30 +3,63 @@
 </style>
 
 <?php
-require_once("entities.php");
+require_once("gameManager.php");
 require_once("gameState.php");
-require_once("power4MapGenerator.php");
+session_start();
 
-
-$player1 = new Player("Red");
-$player2 = new Player("Yellow");
-$player3 = new Player("Blue");
-
-$gameState = new GameState([$player1, $player2, $player3], power4MapGenerator::generateMap(7,7));
-
-$_SESSION["player1"] = $player1;
-$_SESSION["player2"] = $player2;
-$_SESSION["player3"] = $player3;
-
-for ($i = 0; $i < 7; $i++) {
-    for ($j = 0; $j < 7; $j++) {
-        power4MapGenerator::placerPion($i, $j, $gameState->players[array_rand($gameState->players)], $gameState->board);
-    }
+if ((isset($_GET["players"]) && isset($_GET["width"]) && isset($_GET["height"]))) {
+    $players = $_GET["players"];
+    $width = $_GET["width"];
+    $height = $_GET["height"];
+    $_SESSION["gameManager"] = GameManager::newGame($players, $width, $height);
+    $_SESSION["gameState"] = null;
+    $_COOKIE["gameState"] = null;
+} 
+else if (isset($_SESSION["gameState"])) {
+    $_SESSION["gameManager"] = new GameManager(GameState::loadGameState($_SESSION["gameState"]));
+    $_SESSION["gameManager"]->checkWinUponFirstLoad();
+    $_SESSION["gameState"] = NULL;
+}
+else if (isset($_COOKIE["gameState"])) {
+    $_SESSION["gameManager"] = new GameManager(GameState::loadGameState($_COOKIE["gameState"]));
+    $_SESSION["gameManager"]->checkWinUponFirstLoad();
+}
+else if (!isset($_SESSION["gameManager"])) {
+    header('Location: /menu.php');
+    exit();
 }
 
+// Reset
+if (isset($_GET["reset"])) {
+    $gameManager = $_SESSION["gameManager"];
+    $players = $gameManager->gameState->numberOfPlayers();
+    $width = $gameManager->gameState->getWidth();
+    $height = $gameManager->gameState->getHeight();
+    $_SESSION["gameManager"] = GameManager::newGame($players, $height, $width);
+}
 
-echo "HomePage";
-echo "<br>";
-echo power4MapGenerator::generateMapHTML($gameState->board);
+$gameManager = $_SESSION["gameManager"];
+
+// Placement de token
+if (isset($_GET["pos_x"]) && isset($_GET["pos_y"])) {
+    $pos_x = $_GET["pos_x"];
+    $pos_y = $_GET["pos_y"];
+    $gameManager->placeToken($pos_x, $pos_y);
+}
+
+$gameState = $gameManager->gameState;
+setcookie("gameState", $gameState->getGameStateAsSerial(), ["expires" => time() + 3600]);
+$gameManager->checkWin();
+
+// Retour au menu
+echo "<a href='menu.php'><button>Menu</button></a>";
+
+// Reset
+echo "<a href='/?reset=1'><button>Reset</button></a>";
+
+//Sauvegarde de la partie
+echo "<a href='/save.php'><button>Sauvegarder</button></a>";
+
+echo power4MapGenerator::generateMapHTML($gameState->board, !$gameManager->win);
 
 

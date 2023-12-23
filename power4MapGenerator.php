@@ -29,14 +29,18 @@ class power4MapGenerator{
      * 
      * @param array $map Tableau 2D représentant la map
      */
-    public static function generateMapHTML(array $map) {
+    public static function generateMapHTML(array $map, bool $isClickable = True) {
         echo "<table>";
         for ($i = 0; $i < count($map); $i++) {
             echo "<tr>";
             for ($j = 0; $j < count($map[$i]); $j++) {
                 echo "<td>";
                 if (is_null($map[$i][$j])) {
-                    echo "<a href='index.php?pos_x=".$i."&pos_y=".$j."'><img src='sprites/emptyToken.png'></a>";
+                    if ($isClickable){
+                        echo "<a href='index.php?pos_x=".$i."&pos_y=".$j."'><img src='sprites/emptyToken.png'></a>";
+                    } else {
+                        echo "<img src='sprites/emptyToken.png'>";
+                    }
                 } else {
                     echo "<img src='".$map[$i][$j]->image_path."'>";
                 }
@@ -61,7 +65,6 @@ class power4MapGenerator{
         if (is_null($map[$pos_x][$pos_y])) {
             $token = new Token($player, $pos_x, $pos_y, "sprites/".$player->color."Token.png");
             $map[$pos_x][$pos_y] = $token;
-            $player->addToken($token);
             return True;
         } else {
             return False;
@@ -77,7 +80,7 @@ class power4MapGenerator{
      * @param int $pos_y Position Y du pion
      * @param Player $player Joueur qui pose le pion
      * @param array $map Tableau 2D représentant la map
-     * @return array Map si un pion a pu être posé, NULL sinon
+     * @return ?array Map si un pion a pu être posé, NULL sinon
      */
     public static function placerPionSansReference(int $pos_x, int $pos_y, Player $player, array $map) {
         if (is_null($map[$pos_x][$pos_y])) {

@@ -10,7 +10,6 @@
 class Player 
 {
     public string $color;
-    public array $tokens = [];
     // public int $score; // Additional feature
 
     /**
@@ -18,14 +17,6 @@ class Player
      */
     public function __construct(string $color) {
         $this->color = $color;
-        $this->tokens = [];
-    }
-
-    /**
-     * @return void Ajoute un jeton au joueur
-     */
-    public function addToken(Token $token): void {
-        $this->tokens[] = $token;
     }
 }
 
@@ -38,18 +29,18 @@ class Player
  * @param string $image_path Chemin vers l'image du jeton | Si non existante, charge l'image par défaut
  */
 class Token {
-    public Player $player;
+    public ?Player $player;
     public int $pos_x;
     public int $pos_y;
     public string $image_path; // Image à charger
 
     /**
-     * @param Player $player Joueur auquel appartient le jeton
+     * @param ?Player $player Joueur auquel appartient le jeton
      * @param int $pos_x Position en x du jeton
      * @param int $pos_y Position en y du jeton
      * @param string $image_path Chemin vers l'image du jeton
      */
-    public function __construct(Player $player, int $pos_x, int $pos_y, string $image_path) {
+    public function __construct(?Player $player, int $pos_x, int $pos_y, string $image_path) {
         $this->player = $player;
         $this->pos_x = $pos_x;
         $this->pos_y = $pos_y;

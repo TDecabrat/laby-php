@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Classe stockant l'état du jeu et permettant son importation/exporation en JSON
+ * Classe stockant l'état du jeu et permettant son importation/exporation
  * @property array $players Joueurs du jeu
  * @property array $board Plateau de jeu
  * @property int $currentPlayerIndex Index du joueur actuel
@@ -37,18 +37,25 @@ class GameState
     }
 
     /**
-     * @return string Etat du jeu au format JSON | Pour la sauvegarde
+     * @return int Le nombre de joueurs
      */
-    public function getGameStateAsJSON() {
-        return json_encode($this);
+    public function numberOfPlayers(): int {
+        return count($this->players);
     }
 
     /**
-     * @param string $gameStateAsJson Etat du jeu au format JSON
+     * @return string Etat du jeu serialisé | Pour la sauvegarde
+     */
+    public function getGameStateAsSerial(): string {
+        return serialize($this);
+    }
+
+    /**
+     * @param string $gameStateAsSerial Etat du jeu serialisé
      * @return GameState Etat du jeu
      */
-    public static function loadGameState(string $gameStateAsJson): GameState {
-        return json_decode($gameStateAsJson);
+    public static function loadGameState(string $gameStateAsSerial): GameState {
+        return unserialize($gameStateAsSerial);
     }
 
     /**
@@ -56,11 +63,12 @@ class GameState
      * 
      * @param int $pos_x Position X du token
      * @param int $pos_y Position Y du token
-     * @return Token Token à la position donnée
+     * @return Token|null Token à la position donnée, ou NULL si les coordonnées sont invalides
      */
-    public function getToken($pos_x, $pos_y): Token {
-        if ($pos_x < 0 || $pos_y < 0 || $pos_x > $this->getWidth() || $pos_y > $this->getHeight()) {
-            return NULL;
+    public function getToken($pos_x, $pos_y): ?Token {
+        if ($pos_x < 0 || $pos_y < 0 || $pos_x >= $this->getWidth() || $pos_y >= $this->getHeight() || is_null($this->board[$pos_x][$pos_y])) {
+            $token = new Token(null, $pos_x, $pos_y, "sprites/emptyToken.png");
+            return $token;
         } else {
             return $this->board[$pos_x][$pos_y];
         }
