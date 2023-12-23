@@ -15,13 +15,13 @@ if ((isset($_GET["players"]) && isset($_GET["width"]) && isset($_GET["height"]))
     $_SESSION["gameState"] = null;
     $_COOKIE["gameState"] = null;
 }
-else if (isset($_SESSION["gameManager"])){
-    $gameManager = $_SESSION["gameManager"];
-}
 else if (isset($_SESSION["gameState"])) {
     $_SESSION["gameManager"] = new GameManager(GameState::loadGameState($_SESSION["gameState"]));
     $_SESSION["gameManager"]->checkWinUponFirstLoad();
     $_SESSION["gameState"] = NULL;
+}
+else if (isset($_SESSION["gameManager"])){
+    $gameManager = $_SESSION["gameManager"];
 }
 else if (isset($_COOKIE["gameState"])) {
     $_SESSION["gameManager"] = new GameManager(GameState::loadGameState($_COOKIE["gameState"]));
@@ -44,7 +44,7 @@ if (isset($_GET["reset"])) {
 $gameManager = $_SESSION["gameManager"];
 
 // Placement de token
-if (isset($_GET["pos_x"]) && isset($_GET["pos_y"]) && !$gameManager->win) {
+if (isset($_GET["pos_x"]) && isset($_GET["pos_y"]) && !$gameManager->checkWin()) {
     $pos_x = $_GET["pos_x"];
     $pos_y = $_GET["pos_y"];
     $gameManager->placeToken($pos_x, $pos_y);
@@ -52,7 +52,11 @@ if (isset($_GET["pos_x"]) && isset($_GET["pos_y"]) && !$gameManager->win) {
 
 $gameState = $gameManager->gameState;
 setcookie("gameState", $gameState->getGameStateAsSerial(), ["expires" => time() + 3600]);
-$gameManager->checkWin();
+
+
+if ($gameManager->checkWin()) {
+    echo "<h1>Victoire du joueur ".$gameState->getCurrentPlayer()->color."!</h1>";
+}
 
 
 // Retour au menu
@@ -64,6 +68,6 @@ echo "<a href='/?reset=1'><button>Reset</button></a>";
 //Sauvegarde de la partie
 echo "<a href='/save.php'><button>Sauvegarder</button></a>";
 
-echo power4MapGenerator::generateMapHTML($gameState->board, !$gameManager->win);
+echo power4MapGenerator::generateMapHTML($gameState->board, !$gameManager->checkWin());
 
 
