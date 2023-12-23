@@ -23,7 +23,7 @@ class GameManager{
      * @param int $nbRow Nombre de lignes
      * @param int $nbCol Nombre de colonnes
      */
-    public static function newGame(int $nbPlayer, int $nbRow, int $nbCol) {
+    public static function newGame(int $nbPlayer, int $nbRow, int $nbCol): GameManager {
         $playersInGame = [];
         for ($i = 0; $i < $nbPlayer; $i++) {
             $playersInGame[$i] = new Player(self::$colors[$i]);
@@ -45,7 +45,7 @@ class GameManager{
      * @param int $pos_y Position Y du pion
      * @return Token Pion à la position donnée
      */
-    public function getToken($pos_x, $pos_y) {
+    public function getToken($pos_x, $pos_y): Token {
         return $this->gameState->getToken($pos_x, $pos_y);
     }
 
@@ -57,7 +57,7 @@ class GameManager{
      * 
      * @return bool True si le joueur a gagné, False sinon
      */
-    public function areFourConnectedWhole(){
+    public function areFourConnectedWhole(): bool {
         $currentPlayer = $this->gameState->getCurrentPlayer();
 
         // horizontalCheck 
@@ -109,7 +109,7 @@ class GameManager{
      * @param Token $token Pion à vérifier
      * @return bool True si le joueur a gagné, False sinon
      */
-    public function areFourConnected(Token $token) {
+    public function areFourConnected(Token $token): bool{
         // horizontalCheck
         for ($j = $token->pos_y - 3; $j <= $token->pos_y; $j++) {
             if ($j >= 0 && $j + 3 < $this->gameState->getHeight()) {
@@ -168,16 +168,33 @@ class GameManager{
     }
 
     /**
+     * Vérifie la condition de victoire lors du chargement d'une partie
+     */
+    public function checkWinUponFirstLoad(): void {
+        if ($this->areFourConnectedWhole()) {
+            $this->win = true;
+        }
+    }
+
+    /**
+     * Vérifie la condition de victoire lors du cours du jeu
+     */
+    public function checkWin(): void {
+        if ($this->win) {
+            echo "Victoire pour le joueur ".$this->gameState->getCurrentPlayer()->color." !";
+        }
+    }
+
+    /**
      * Place un pion à une position donnée
      * 
      * @param int $pos_x Position X du pion
      * @param int $pos_y Position Y du pion
      * @return bool True si le pion a pu être placé, False sinon
      */
-    public function placeToken($pos_x, $pos_y) {
+    public function placeToken($pos_x, $pos_y): bool {
         if (power4MapGenerator::placerPion($pos_x, $pos_y, $this->gameState->getCurrentPlayer(), $this->gameState->board)) {
             if ($this->areFourConnected($this->getToken($pos_x, $pos_y))) {
-                echo "Victoire pour le joueur ".$this->gameState->getCurrentPlayer()->color." !";
                 $this->win = true;
             } else {
                 $this->nextPlayer();
@@ -188,16 +205,11 @@ class GameManager{
     }
 
     /**
-     * 
-     */
-
-
-    /**
      * Reset la partie
      * 
      * @return void
      */
-    public function reset() {
+    public function reset(): void {
         $this->win = false;
         $this->gameState = new GameState($this->gameState->players, power4MapGenerator::generateMap($this->gameState->getWidth(), $this->gameState->getHeight()));
     }
@@ -207,9 +219,9 @@ class GameManager{
      * 
      * @return void
      */
-    public function downloadGameState() {
-        header('Content-disposition: attachment; filename=connect4-gameState.json');
+    public function downloadGameState(): void {
+        header('Content-disposition: attachment; filename=connect4-gameState.txt');
         header('Content-type: application/json');
-        echo $this->gameState->getGameStateAsJSON();
+        echo $this->gameState->getGameStateAsSerial();
     }
 }

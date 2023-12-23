@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Classe stockant l'état du jeu et permettant son importation/exporation en JSON
+ * Classe stockant l'état du jeu et permettant son importation/exporation
  * @property array $players Joueurs du jeu
  * @property array $board Plateau de jeu
  * @property int $currentPlayerIndex Index du joueur actuel
@@ -37,18 +37,25 @@ class GameState
     }
 
     /**
-     * @return string Etat du jeu au format JSON | Pour la sauvegarde
+     * @return int Le nombre de joueurs
      */
-    public function getGameStateAsJSON() {
-        return json_encode($this);
+    public function numberOfPlayers(): int {
+        return count($this->players);
     }
 
     /**
-     * @param string $gameStateAsJson Etat du jeu au format JSON
+     * @return string Etat du jeu serialisé | Pour la sauvegarde
+     */
+    public function getGameStateAsSerial(): string {
+        return serialize($this);
+    }
+
+    /**
+     * @param string $gameStateAsSerial Etat du jeu serialisé
      * @return GameState Etat du jeu
      */
-    public static function loadGameState(string $gameStateAsJson): GameState {
-        return json_decode($gameStateAsJson);
+    public static function loadGameState(string $gameStateAsSerial): GameState {
+        return unserialize($gameStateAsSerial);
     }
 
     /**

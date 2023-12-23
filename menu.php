@@ -1,11 +1,9 @@
 <?php
 session_start();
-echo "Test";
 if (isset($_FILES["gameStateFile"])) {
-    echo "Pizza ?";
     $gameStateFile = $_FILES["gameStateFile"];
     $fileContent = file_get_contents($gameStateFile["tmp_name"]);
-    $_SESSION["gameState"] = json_decode($fileContent, true); // Note: Set the second parameter to true for an associative array
+    $_SESSION["gameState"] = $fileContent;
     header("Location: /");
     exit();
 }
@@ -23,9 +21,25 @@ if (isset($_FILES["gameStateFile"])) {
     <body>
         <h1>Connect 4</h1>
         <h2>Menu</h2>
-        <a href="/"><button>Nouvelle partie</button></a>
+        <form action="/" method="get">
+            <label for="players">Nombre de joueurs</label>
+            <select name="players" id="players">
+                <option value="2" selected>2</option>
+                <?php for ($i = 3; $i <= 4; $i++) { echo "<option value=".$i.">".$i."</option>"; } ?>
+            </select><br>
+            <label for="width">Largeur du plateau</label>
+            <select name="width" id="width">
+                <option value="5" selected>5</option>
+                <?php for ($i = 6; $i <= 12; $i++) { echo "<option value=".$i.">".$i."</option>"; } ?>
+            </select><br>
+            <label for="height">Hauteur du plateau</label>
+            <select name="height" id="height">
+                <option value="5" selected>5</option>
+                <?php for ($i = 6; $i <= 12; $i++) { echo "<option value=".$i.">".$i."</option>"; } ?>
+            </select><br>
+            <input type="submit" value="Nouvelle partie">
+        </form>
         <?php
-        // Note: Check if $_SESSION["gameState"] is set and not empty
         if (!empty($_SESSION["gameManager"])) {
             echo "<a href='/'><button>Continuer la partie</button></a>";
         }
