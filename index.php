@@ -48,10 +48,6 @@ if (isset($_GET["pos_x"]) && isset($_GET["pos_y"]) && !$gameManager->checkWin())
 
 $gameState = $gameManager->gameState;
 setcookie("gameState", $gameState->getGameStateAsSerial(), ["expires" => time() + 3600]);
-
-if ($gameManager->checkWin()) {
-    echo "<h1>Victoire du joueur ".$gameState->getCurrentPlayer()->color."!</h1>";
-}
 ?>
 
 <html>
@@ -66,6 +62,13 @@ if ($gameManager->checkWin()) {
         <h1>Connect 4</h1>
         <h2>Game</h2>
         <div class="game">
+            <div class="win">
+                <?php
+                    if ($gameManager->checkWin()) {
+                        echo "<h3>Victoire du joueur ".$gameState->getCurrentPlayer()->color."</h3>";
+                    }
+                ?>
+            </div>
             <div class="gameBoard">
                 <?php
                 echo power4MapGenerator::generateMapHTML($gameState->board, !$gameManager->checkWin());
