@@ -57,11 +57,12 @@ Style menu : 20 minutes
 
 ### Dimanche
 
-Style puissance 4 : TBD
+Style puissance 4 : 10 minutes
+Fix Logique du jeu + Autres : 20 minutes
 
 
 ### Temps total
-7h15 + temps style puissance 4
+7h45
 
 
 ## Difficultés rencontrées
