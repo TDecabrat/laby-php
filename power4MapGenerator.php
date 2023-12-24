@@ -71,30 +71,4 @@ class power4MapGenerator{
         }
         return null;
     }
-
-    /**
-     * Effectue une action à des coordonnées données
-     * Renvoie le tableau si un pion a pu être posé, NULL sinon
-     * (Version sans passage par référence, si nécessaire)
-     * 
-     * @param int $pos_x Position X du pion
-     * @param int $pos_y Position Y du pion
-     * @param Player $player Joueur qui pose le pion
-     * @param array $map Tableau 2D représentant la map
-     * @return ?array Map si un pion a pu être posé, NULL sinon
-     */
-    public static function placerPionSansReference(int $pos_x, int $pos_y, Player $player, array $map) {
-        if (is_null($map[$pos_x][$pos_y])) {
-            $new_map = clone $map;
-            $token = new Token($player, $pos_x, $pos_y, "sprites/".$player->color."Token.png");
-            $new_map[$pos_x][$pos_y] = $token;
-            $player->addToken($token);
-            return $new_map;
-        } else {
-            return NULL;
-        }
-    }
-
-    
-    
 }
