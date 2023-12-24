@@ -1,7 +1,7 @@
 # Méthode d'installation du projet / dépendances
 
 ## PHP
-Afin de pouvoir utiliser le projet, il est nécéssaire de disposer du langage PHP.
+Afin de pouvoir utiliser le projet, il est nécessaire de disposer du langage PHP.
 Afin de l'installer :
 
 - Sous Linux :
