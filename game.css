@@ -1,0 +1,48 @@
+/* Reset CSS for consistent styling across browsers */
+* {
+  margin: 0;
+  padding: 0;
+}
+
+h1 {
+  color: #329CB5;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background-color: #DFDFDF;
+  color: #4C4C4C;
+  text-align: center;
+  padding: 20px;
+}
+
+button {
+  background-color: #329CB5;
+  color: #ffffff;
+  padding: 10px 15px;
+  margin: 5px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.game {
+  max-width: min-content;
+  margin: 20px auto;
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 4px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.gameControls {
+  margin-top: 15px;
+}
+
+button:hover {
+  background-color: #1880a0;
+}
+
+table, th, td {
+    border: 1px solid;
+  }

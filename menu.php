@@ -13,7 +13,7 @@ if (isset($_FILES["gameStateFile"])) {
 <html lang="fr">
     <head>
         <meta charset="utf-8">
-        <title>Connect 4</title>
+        <title>Puissance 4 - Menu</title>
         <style>
             <?php include 'menu.css'; ?>
         </style>
