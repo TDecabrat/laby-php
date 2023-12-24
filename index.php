@@ -1,7 +1,3 @@
-<style>
-    <?php include 'temporaryBorders.css'; ?>
-</style>
-
 <?php
 require_once("gameManager.php");
 require_once("gameState.php");
@@ -53,21 +49,33 @@ if (isset($_GET["pos_x"]) && isset($_GET["pos_y"]) && !$gameManager->checkWin())
 $gameState = $gameManager->gameState;
 setcookie("gameState", $gameState->getGameStateAsSerial(), ["expires" => time() + 3600]);
 
-
 if ($gameManager->checkWin()) {
     echo "<h1>Victoire du joueur ".$gameState->getCurrentPlayer()->color."!</h1>";
 }
+?>
 
-
-// Retour au menu
-echo "<a href='menu.php'><button>Menu</button></a>";
-
-// Reset
-echo "<a href='/?reset=1'><button>Reset</button></a>";
-
-//Sauvegarde de la partie
-echo "<a href='/save.php'><button>Sauvegarder</button></a>";
-
-echo power4MapGenerator::generateMapHTML($gameState->board, !$gameManager->checkWin());
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Puissance 4</title>
+        <style>
+            <?php include 'game.css'; ?>
+        </style>
+    </head>
+    <body>
+        <h1>Connect 4</h1>
+        <h2>Game</h2>
+        <div class="game">
+            <div class="gameBoard">
+                <?php
+                echo power4MapGenerator::generateMapHTML($gameState->board, !$gameManager->checkWin());
+                ?>
+            </div>
+            <div class="gameControls">
+                <a href='menu.php'><button>Menu</button></a>
+                <a href='/?reset=1'><button>Reset</button></a>
+                <a href='/save.php'><button>Sauvegarder</button></a>
+            </div>
+        </div>
 
 
