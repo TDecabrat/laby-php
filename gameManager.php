@@ -193,8 +193,9 @@ class GameManager{
      * @return bool True si le pion a pu être placé, False sinon
      */
     public function placeToken($pos_x, $pos_y): bool {
-        if (power4MapGenerator::placerPion($pos_x, $pos_y, $this->gameState->getCurrentPlayer(), $this->gameState->board)) {
-            if ($this->areFourConnected($this->getToken($pos_x, $pos_y))) {
+        $token = power4MapGenerator::placerPion($pos_x, $pos_y, $this->gameState->getCurrentPlayer(), $this->gameState->board);
+        if (!is_null($token)) {
+            if ($this->areFourConnected($token)) {
                 $this->win = true;
             } else {
                 $this->nextPlayer();

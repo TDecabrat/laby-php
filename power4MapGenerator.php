@@ -59,41 +59,16 @@ class power4MapGenerator{
      * @param int $pos_y Position Y du pion
      * @param Player $player Joueur qui pose le pion
      * @param array $map Tableau 2D représentant la map | Passé par référence
-     * @return bool True si un pion a pu être posé, False sinon
+     * @return ?Token Un token si un pion a pu être posé, NULL sinon
      */
     public static function placerPion(int $pos_x, int $pos_y, Player $player, array &$map) {
-        if (is_null($map[$pos_x][$pos_y])) {
-            $token = new Token($player, $pos_x, $pos_y, "sprites/".$player->color."Token.png");
-            $map[$pos_x][$pos_y] = $token;
-            return True;
-        } else {
-            return False;
+        for ($j = count($map)-1; $j >= 0; $j--) {
+            if (is_null($map[$j][$pos_y])) {
+                $token = new Token($player, $j, $pos_y, "sprites/".$player->color."Token.png");
+                $map[$j][$pos_y] = $token;
+                return $token;
+            }
         }
+        return null;
     }
-
-    /**
-     * Effectue une action à des coordonnées données
-     * Renvoie le tableau si un pion a pu être posé, NULL sinon
-     * (Version sans passage par référence, si nécessaire)
-     * 
-     * @param int $pos_x Position X du pion
-     * @param int $pos_y Position Y du pion
-     * @param Player $player Joueur qui pose le pion
-     * @param array $map Tableau 2D représentant la map
-     * @return ?array Map si un pion a pu être posé, NULL sinon
-     */
-    public static function placerPionSansReference(int $pos_x, int $pos_y, Player $player, array $map) {
-        if (is_null($map[$pos_x][$pos_y])) {
-            $new_map = clone $map;
-            $token = new Token($player, $pos_x, $pos_y, "sprites/".$player->color."Token.png");
-            $new_map[$pos_x][$pos_y] = $token;
-            $player->addToken($token);
-            return $new_map;
-        } else {
-            return NULL;
-        }
-    }
-
-    
-    
 }
